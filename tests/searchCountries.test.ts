@@ -1,5 +1,5 @@
 import { afterEach, describe, it, expect, vi } from 'vitest';
-import { searchCountries } from '../src/searchCountries';
+import { searchCountries } from '../src/api/searchCountries';
 
 describe('searchCountries', () => {
   afterEach(() => {
@@ -38,15 +38,16 @@ describe('searchCountries', () => {
 
     const controller = new AbortController();
 
-    searchCountries('south korea', controller.signal);
+    await searchCountries('south korea', controller.signal);
 
+    // проверка кодирования node -e "console.log(encodeURIComponent('south korea'))"
     expect(fetchMock).toHaveBeenCalledExactlyOnceWith('https://countries.dev/name/south%20korea', {
       signal: controller.signal,
     });
   });
   it('should return empty array when response status is 404', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
+      ok: false,
       status: 404,
     });
 
@@ -60,7 +61,7 @@ describe('searchCountries', () => {
   });
   it('should throw HttpError when response status is not successful', async () => {
     const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
+      ok: false,
       status: 500,
     });
 
@@ -80,6 +81,6 @@ describe('searchCountries', () => {
 
     const controller = new AbortController();
 
-    await expect(searchCountries('spain', controller.signal)).toThrow('Network Error');
+    await expect(searchCountries('spain', controller.signal)).rejects.toThrow('Network Error');
   });
 });
