@@ -5,7 +5,9 @@ import { mapCountryResponse } from '../src/mapCountryResponse';
 describe('mapCountryResponse', () => {
   const raw = {
     name: 'Spain',
-    flag: 'https://flagcdn.com/es.svg',
+    flags: {
+      svg: 'https://flagcdn.com/es.svg',
+    },
     capital: 'Madrid',
     region: 'Europe',
     population: 47351567,
